@@ -85,8 +85,8 @@ func (n *Node) Generate() ID {
 
 func (i ID) Uint64() uint64 { return uint64(i) }
 
-func (i ID) UintBytes() [8]byte {
-	var b [8]byte
-	binary.BigEndian.PutUint64(b[:], uint64(i))
+func (i ID) UintBytes() []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, uint64(i))
 	return b
 }
