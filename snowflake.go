@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -73,6 +75,8 @@ func (n *Node) Generate() ID {
 			for now <= n.time {
 				now = n.milliseconds()
 			}
+
+			log.Warn().Msg("mitigation triggered")
 		}
 	} else {
 		n.step = 0
