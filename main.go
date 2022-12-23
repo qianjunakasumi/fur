@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"strconv"
 
 	"github.com/dapr/go-sdk/service/common"
@@ -10,11 +11,40 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var Snowflake = NewNode(0)
+var Snowflake *Node
+
+func getEnv() zerolog.Level {
+
+	node, ok := os.LookupEnv("FUR_NODE")
+	if !ok {
+		log.Panic().Msg("cannot get \"FUR_NODE\" env")
+	}
+
+	nodeid, err := strconv.ParseInt(node, 10, 8)
+	if err != nil {
+		log.Panic().Msg("cannot parse nodeid")
+	}
+
+	Snowflake = NewNode(nodeid)
+
+	level, ok := os.LookupEnv("FUR_LOGLEVEL")
+	if !ok {
+		level = "1"
+	}
+
+	levelid, err := strconv.ParseInt(level, 10, 8)
+	if err != nil {
+		log.Panic().Msg("cannot parse log level")
+	}
+
+	return zerolog.Level(levelid)
+}
 
 func main() {
 
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	levelid := getEnv()
+
+	zerolog.SetGlobalLevel(levelid)
 
 	s, err := daprd.NewService(":50001")
 	if err != nil {

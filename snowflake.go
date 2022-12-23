@@ -9,14 +9,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var (
-	Epoch int64 = 1670628825675
-
-	NodeBits uint8 = 3
-
-	StepBits uint8 = 8
-)
-
 // A Node struct holds the basic information needed for a snowflake generator
 // node
 type Node struct {
@@ -38,6 +30,12 @@ type ID uint64
 // NewNode returns a new snowflake node that can be used to generate snowflake
 // IDs
 func NewNode(node int64) *Node {
+
+	const (
+		Epoch    int64 = 1670628825675
+		NodeBits uint8 = 3
+		StepBits uint8 = 8
+	)
 
 	nodeMax := int64(-1 ^ (-1 << NodeBits))
 	if node < 0 || node > nodeMax {
