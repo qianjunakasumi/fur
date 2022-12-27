@@ -29,10 +29,9 @@ type ID uint64
 
 // NewNode returns a new snowflake node that can be used to generate snowflake
 // IDs
-func NewNode(node int64) *Node {
+func NewNode(node, epoch int64) *Node {
 
 	const (
-		Epoch    int64 = 1670628825675
 		NodeBits uint8 = 3
 		StepBits uint8 = 8
 	)
@@ -51,7 +50,7 @@ func NewNode(node int64) *Node {
 
 	var curTime = time.Now()
 	// add time.Duration to curTime to make sure we use the monotonic clock if available
-	n.epoch = curTime.Add(time.Unix(Epoch/1000, (Epoch%1000)*1000000).Sub(curTime))
+	n.epoch = curTime.Add(time.Unix(epoch/1000, (epoch%1000)*1000000).Sub(curTime))
 
 	return &n
 }

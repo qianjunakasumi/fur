@@ -15,17 +15,27 @@ var Snowflake *Node
 
 func getEnv() zerolog.Level {
 
-	node, ok := os.LookupEnv("FUR_NODE")
+	nodestr, ok := os.LookupEnv("FUR_NODE")
 	if !ok {
 		log.Panic().Msg("cannot get \"FUR_NODE\" env")
 	}
 
-	nodeid, err := strconv.ParseInt(node, 10, 8)
+	nodeid, err := strconv.ParseInt(nodestr, 10, 8)
 	if err != nil {
 		log.Panic().Msg("cannot parse nodeid")
 	}
 
-	Snowflake = NewNode(nodeid)
+	epochstr, ok := os.LookupEnv("FUR_EPOCH")
+	if !ok {
+		log.Panic().Msg("cannot get \"FUR_EPOCH\" env")
+	}
+
+	epochint, err := strconv.ParseInt(epochstr, 10, 64)
+	if err != nil {
+		log.Panic().Msg("cannot parse epoch")
+	}
+
+	Snowflake = NewNode(nodeid, epochint)
 
 	level, ok := os.LookupEnv("FUR_LOGLEVEL")
 	if !ok {
